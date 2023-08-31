@@ -3,7 +3,7 @@ from django.contrib.auth import logout,authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import VotingForm
-from .models import VotingData, VoterDataAccess
+from .models import VotingData
 from django.core.paginator import Paginator
 # Create your views here.
 @login_required(login_url="login")
@@ -53,28 +53,6 @@ def delete(request, id):
         voting_data.delete()
         # Redirect to the home page or any other appropriate URL
         return HttpResponseRedirect("/")
-    
-# def filter(request):
-#     if request.method=='POST':
-#         polling_booth_number=request.POST['polling_booth_number']
-#         polling_booth_name=request.POST['polling_booth_name']
-#         emps =VotingData.objects.all()
-#         if polling_booth_number:
-#             emps=VotingData.filter(Q(polling_booth_number=polling_booth_number))
-
-#         if polling_booth_name:
-#             emps=VotingData.filter(Q(polling_booth_name__icontains=polling_booth_name))
-
-#         context ={
-#             'emps':emps
-#          }
-#         return render(request,'view.html',context)
-
-#     elif request.method=='GET':
-#         return render(request,'filter.html')
-
-#     else:
-#         return HttpResponse("an exception occured")
 
 
 def login(request):
