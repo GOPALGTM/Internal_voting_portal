@@ -1,0 +1,89 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+    {% if perms.voting.view_votingdata %}
+    <h2>Voting Data</h2>
+    <form id="filter-form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" id="filter-booth-number" name="booth_number_filter" placeholder="Filter Booth Number">
+            <input type="text" id="filter-booth-name" name="booth_name_filter" placeholder="Filter Booth Name">
+            <!-- Add more filter fields as needed -->
+            <button type="submit">Apply Filters</button>
+        </div>
+    </form>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Booth Number</th>
+                <th>Booth Name</th>
+                <th>Constituency</th>
+                <th>Winner 2014</th>
+                <th>1st Runner up other than INC and BJP</th>
+                <th>Margin %</th>
+                <th>Margin</th>
+                <th>Total Voters</th>
+                <th>BJP Votes</th>
+                <th>BJP % Vote</th>
+                <th>INC Votes</th>
+                <th>INC % Votes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in form %}
+            <tr>
+                <td>{{ item.polling_booth_number }}</td>
+                <td>{{ item.polling_booth_name }}</td>
+                <td>{{ item.parent_constituency }}</td>
+                <td>{{ item.winner_2014 }}</td>
+                <td>{{ item.first_runner_up_other_than_INC_and_BJP }}</td>
+                <td>{{ item.margin_percentage }}</td>
+                <td>{{ item.margin }}</td>
+                <td>{{ item.total_voters }}</td>
+                <td>{{ item.bjp_votes }}</td>
+                <td>{{ item.bjp_vote_percentage }}</td>
+                <td>{{ item.inc_votes }}</td>
+                <td>{{ item.inc_vote_percentage }}</td>
+                <td>
+                    {% if perms.voting.delete_Votingdata %}
+                    <form method="post" action="{% url 'deletedata' item.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                    </form>
+                    {% else %}
+                    <span>No delete permission</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if form.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ form.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for i in form.paginator.page_range %}
+            <li class="page-item {% if i == form.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endfor %}
+            {% if form.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ form.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <a href="{% url 'index' %}" class="btn btn-primary">Add Voting Data</a>
+    {% else %}
+    <span>No view permission</span>
+    {% endif %}
+</div>
+{% endblock content %}

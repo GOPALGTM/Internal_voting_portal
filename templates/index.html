@@ -1,0 +1,8 @@
+{% extends 'base.html' %} {% block content %}
+<h3 class="container text-center mt-4">Add VotingData</h3>
+<form action="" method="post" class="container mt-5">
+    {% csrf_token %} {{form.as_p}}
+    <button class="btn btn-primary">Submit</button>
+    <a href="/" class="btn btn-info">Back</a>
+</form>
+{% endblock content %}
